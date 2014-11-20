@@ -3,9 +3,9 @@ function Chemistry(stepnum,rmax)
     r=[0,0];%initialising variable radius
     theta=[0,0];%initialising variable theta
     phi=[0,0]; %initialising variable phi
-    [r,theta,phi]=fml(stepnum,rmax);           
+    [r,theta,phi]=fml(stepnum,rmax);       
     f=wavefunction(r,theta,phi);
-    [coordx,coordy,coordz]=polartocartesian(r,theta,phi);
+    [coordx,coordy,coordz]=sph2cart(r,theta,phi);
     plot(r, probdensity(f));
     yn=ispointthere(probdensity(f),stepnum);
     pointsx=yn*coordx;
@@ -15,16 +15,13 @@ function Chemistry(stepnum,rmax)
     hold off
 end
 
-function [x,y,z]=polartocartesian (r,theta,phi)
-    z=r.*sin(theta);
-    y=r.*sin(theta).*sin(phi);
-    x=r.*sin(theta).*cos(phi);
-end
-
 function [r,theta,phi]=fml(stepnum,rmax)
     r1=[0:rmax/stepnum:rmax];
     theta1=[0:(2*pi)/stepnum:2*pi];
     phi1=[0:(0.5*pi)/stepnum:pi/2];
+    r=[0,0];%initialising variable radius
+    theta=[0,0];%initialising variable theta
+    phi=[0,0]; %initialising variable phi
     l=1;
     while(l<=stepnum)
         n=1;

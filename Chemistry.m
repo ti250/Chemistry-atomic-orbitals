@@ -8,17 +8,22 @@ function Chemistry(stepnum,rmax)
     [coordx,coordy,coordz]=sph2cart(r,theta,phi);
     plot(r, probdensity(f));
     yn=ispointthere(probdensity(f),stepnum);
-    pointsx=yn*coordx;
-    pointsy=yn*coordy;
-    pointsz=yn*coordz;
-    scatter3(coordx,coordy,coordz)
+    pointsx=yn.*coordx;
+    pointsy=yn.*coordy;
+    pointsz=yn.*coordz;
+	s=5;
+	scatter3(pointsx,pointsy,pointsz, s, 'filled')
+	%vrml(gcf,'output.wrl')
+	%figure
+	%scatter3(coordx,coordy,coordz, s, 'filled')
     hold off
 end
 
 function [r,theta,phi]=fml(stepnum,rmax)
     r1=[0:rmax/stepnum:rmax];
     theta1=[0:(2*pi)/stepnum:2*pi];
-    phi1=[0:(0.5*pi)/stepnum:pi/2];
+    phi1=[0:(2*pi)/stepnum:pi/2];
+	phi1=[phi1,phi1,phi1,phi1];
     r=[0,0];%initialising variable radius
     theta=[0,0];%initialising variable theta
     phi=[0,0]; %initialising variable phi
@@ -41,7 +46,8 @@ end
 
 function f= wavefunction (r,theta,phi)
     %f= ((r).^2).*(exp(-r/(3))).*(sin(theta).^2).*cos(2*phi);
-    f=(2-r).*exp(-r/2);
+    %f=(2-r).*exp(-r/2);
+	f=  r.*exp(-r/2).*cos(theta);
 end
 
 function z = probdensity(waves)
@@ -50,15 +56,14 @@ end
 
 function a=ispointthere(probability,stepnum)
     n=1;
-    a=zeros(stepnum);
-    while (n<=stepnum);
-        b=rand/10;
+    a=[0,0];
+    while (n<=stepnum^3);
+        b=rand;
         if (probability(n)<b)
-            a(n)=1;
+            a=[a,0];
         elseif (probability(n)>=b)
-            a(n)=0;
+            a=[a,1];
         end
         n=n+1;
     end 
-    a=a(:,1);
 end
